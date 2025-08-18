@@ -1,4 +1,4 @@
-# Dino Game - Game Dev
+# S'Coole Alpaca
 
 The google dino game adapted to the logo of a friends' coffee place.
 
