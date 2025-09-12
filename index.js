@@ -27,18 +27,18 @@ const CACTI_CONFIG = [
   { width: 68 / 1.5, height: 70 / 1.5, image: "images/cactus_3.png" },
   { width: 98 / 1.5, height: 100 / 1.5, image: "images/obstacle1.png" }, // second level
   { width: 78 / 1.5, height: 92 / 1.5, image: "images/vase.png" },
-  { width: 75 / 1.5, height: 80 / 1.5, image: "images/obstacle3.png" },
+  { width: 95 / 1.5, height: 82 / 1.5, image: "images/obstacle3.png" },
   { width: 100 / 1.5, height: 100 / 1.5, image: "images/aguila.png" }, // third level
   { width: 120 / 1.5, height: 100 / 1.5, image: "images/inca_pyramid.png" },
   { width: 75 / 1.5, height: 80 / 1.5, image: "images/coffee_cup.png" },
   { width: 87 / 1.5, height: 90 / 1.5, image: "images/dodo.png" }, // fourth level
-  { width: 80 / 1.5, height: 85 / 1.5, image: "images/logo_bw.png" },
+  { width: 90 / 1.5, height: 95 / 1.5, image: "images/logo_bw.png" },
 ];
 
 // level thresholds
 const LEVEL_2_THRESHOLD = 200; 
-const LEVEL_3_THRESHOLD = 1250; 
-const LEVEL_4_THRESHOLD = 2400; 
+const LEVEL_3_THRESHOLD = 1150; 
+const LEVEL_4_THRESHOLD = 2200; 
 let level2Active = false;
 let level3Active = false;
 let level4Active = false;
@@ -224,8 +224,8 @@ function gameLoop(currentTime) {
       cactiController.setIndexRange(6, 8);
       level3Active = true;
     } else if (level3Active && !level4Active && score.score >= LEVEL_4_THRESHOLD) {
-      // Level 4 uses indexes 8..10
-      cactiController.setIndexRange(8, 10);
+      // Level 4 uses indexes 0..10
+      cactiController.setIndexRange(0, 10);
       level4Active = true;
     }
   }
