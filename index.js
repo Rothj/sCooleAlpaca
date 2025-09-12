@@ -22,10 +22,16 @@ const GROUND_HEIGHT = 24;
 const GROUND_AND_CACTUS_SPEED = 0.5;
 
 const CACTI_CONFIG = [
-  { width: 98 / 1.5, height: 100 / 1.5, image: "images/obstacle1.png" }, // cactus_1
-  { width: 98 / 1.5, height: 100 / 1.5, image: "images/obstacle2.png" },
+  { width: 48 / 1.5, height: 100 / 1.5, image: "images/cactus_1.png" }, // first level
+  { width: 98 / 1.5, height: 100 / 1.5, image: "images/cactus_2.png" },
+  { width: 68 / 1.5, height: 70 / 1.5, image: "images/cactus_3.png" },
+  { width: 98 / 1.5, height: 100 / 1.5, image: "images/obstacle1.png" }, // second level
+  { width: 78 / 1.5, height: 100 / 1.5, image: "images/obstacle2.png" },
   { width: 68 / 1.5, height: 70 / 1.5, image: "images/obstacle3.png" },
 ];
+
+const LEVEL_2_THRESHOLD = 10; // e.g., switch after score >= 1000
+let level2Active = false;
 
 //Game Objects
 let player = null;
@@ -82,6 +88,7 @@ function createSprites() {
     scaleRatio,
     GROUND_AND_CACTUS_SPEED
   );
+  cactiController.setIndexRange(0, 2);
 
   score = new Score(ctx, scaleRatio);
 }
@@ -148,15 +155,18 @@ function reset() {
   cactiController.reset();
   score.reset();
   gameSpeed = GAME_SPEED_START;
+
+  level2Active = false;
+  cactiController.setIndexRange(0, 2); // back to level 1 pool
 }
 
 function showStartGameText() {
   const fontSize = 40 * scaleRatio;
   ctx.font = `${fontSize}px Verdana`;
   ctx.fillStyle = "grey";
-  const x = canvas.width / 14;
+  const x = canvas.width / 12;
   const y = canvas.height / 2;
-  ctx.fillText("Tap Screen or Press Space To Start", x, y);
+  ctx.fillText("Alpaca Game: Tap To Start", x, y);
 }
 
 function updateGameSpeed(frameTimeDelta) {
@@ -186,10 +196,20 @@ function gameLoop(currentTime) {
     player.update(gameSpeed, frameTimeDelta);
     score.update(frameTimeDelta);
     updateGameSpeed(frameTimeDelta);
+
+    // update level based on score
+    if (!level2Active && score.score >= LEVEL_2_THRESHOLD) {
+      // Level 2 uses indexes 3..5
+      cactiController.setIndexRange(3, 5);
+      level2Active = true;
+    }
   }
+
+
 
   if (!gameOver && cactiController.collideWith(player)) {
     gameOver = true;
+    player.die(); // change player sprite to dead image
     setupGameReset();
     score.setHighScore();
   }

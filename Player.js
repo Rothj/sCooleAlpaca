@@ -35,6 +35,10 @@ export default class Player {
     this.dinoRunImages.push(dinoRunImage1);
     this.dinoRunImages.push(dinoRunImage2);
 
+    // dead sprite
+    this.deadImage = new Image();
+    this.deadImage.src = "images/alpaka_standing_eye_closed.png";
+
     //keyboard
     window.removeEventListener("keydown", this.keydown);
     window.removeEventListener("keyup", this.keyup);
@@ -49,6 +53,10 @@ export default class Player {
     window.addEventListener("touchstart", this.touchstart);
     window.addEventListener("touchend", this.touchend);
   }
+
+  die() {
+  this.image = this.deadImage;
+}
 
   touchstart = () => {
     this.jumpPressed = true;

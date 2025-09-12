@@ -14,7 +14,18 @@ export default class CactiController {
     this.scaleRatio = scaleRatio;
     this.speed = speed;
 
+    //  limit which images can be spawned (inclusive indexes)
+    this.startIndex = 0;
+    this.endIndex = this.cactiImages.length - 1;
+
     this.setNextCactusTime();
+  }
+
+    // Call this from index.js when the level changes
+  setIndexRange(start, end) {
+    const n = this.cactiImages.length;
+    this.startIndex = Math.max(0, Math.min(start, n - 1));
+    this.endIndex   = Math.max(0, Math.min(end,   n - 1));
   }
 
   setNextCactusTime() {
@@ -31,7 +42,10 @@ export default class CactiController {
   }
 
   createCactus() {
-    const index = this.getRandomNumber(0, this.cactiImages.length - 1);
+    const start = this.startIndex ?? 0;
+    const end   = this.endIndex   ?? (this.cactiImages.length - 1);
+    const index = this.getRandomNumber(start, end);
+    // const index = this.getRandomNumber(0, this.cactiImages.length - 1);
     const cactusImage = this.cactiImages[index];
     const x = this.canvas.width * 1.5;
     const y = this.canvas.height - cactusImage.height;
