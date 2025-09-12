@@ -3,7 +3,7 @@ import Ground from "./Ground.js";
 import CactiController from "./CactiController.js";
 import Score from "./Score.js";
 
-// python -m http.server 8000
+// python -m http.server 8000 // to run a local server
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -26,12 +26,22 @@ const CACTI_CONFIG = [
   { width: 98 / 1.5, height: 100 / 1.5, image: "images/cactus_2.png" },
   { width: 68 / 1.5, height: 70 / 1.5, image: "images/cactus_3.png" },
   { width: 98 / 1.5, height: 100 / 1.5, image: "images/obstacle1.png" }, // second level
-  { width: 78 / 1.5, height: 100 / 1.5, image: "images/obstacle2.png" },
-  { width: 68 / 1.5, height: 70 / 1.5, image: "images/obstacle3.png" },
+  { width: 78 / 1.5, height: 92 / 1.5, image: "images/vase.png" },
+  { width: 75 / 1.5, height: 80 / 1.5, image: "images/obstacle3.png" },
+  { width: 100 / 1.5, height: 100 / 1.5, image: "images/aguila.png" }, // third level
+  { width: 120 / 1.5, height: 100 / 1.5, image: "images/inca_pyramid.png" },
+  { width: 75 / 1.5, height: 80 / 1.5, image: "images/coffee_cup.png" },
+  { width: 87 / 1.5, height: 90 / 1.5, image: "images/dodo.png" }, // fourth level
+  { width: 80 / 1.5, height: 85 / 1.5, image: "images/logo_bw.png" },
 ];
 
-const LEVEL_2_THRESHOLD = 995; // e.g., switch after score >= 1000
+// level thresholds
+const LEVEL_2_THRESHOLD = 200; 
+const LEVEL_3_THRESHOLD = 1250; 
+const LEVEL_4_THRESHOLD = 2400; 
 let level2Active = false;
+let level3Active = false;
+let level4Active = false;
 
 //Game Objects
 let player = null;
@@ -131,7 +141,7 @@ function showGameOver() {
   const fontSize = 70 * scaleRatio;
   ctx.font = `${fontSize}px Verdana`;
   ctx.fillStyle = "grey";
-  const x = canvas.width / 4.5;
+  const x = canvas.width / 4.5; 
   const y = canvas.height / 2;
   ctx.fillText("GAME OVER", x, y);
 }
@@ -157,6 +167,8 @@ function reset() {
   gameSpeed = GAME_SPEED_START;
 
   level2Active = false;
+  level3Active = false;
+  level4Active = false;
   cactiController.setIndexRange(0, 2); // back to level 1 pool
 }
 
@@ -164,9 +176,14 @@ function showStartGameText() {
   const fontSize = 40 * scaleRatio;
   ctx.font = `${fontSize}px Verdana`;
   ctx.fillStyle = "grey";
-  const x = canvas.width / 12;
+
+  ctx.textAlign = "center"; // Center align the text2
+
+  const x = canvas.width / 2;
   const y = canvas.height / 2;
   ctx.fillText("Alpaca Game: Tap To Start", x, y);
+
+  ctx.textAlign = "left"; // Reset to default left align
 }
 
 function updateGameSpeed(frameTimeDelta) {
@@ -197,15 +214,21 @@ function gameLoop(currentTime) {
     score.update(frameTimeDelta);
     updateGameSpeed(frameTimeDelta);
 
-    // update level based on score
-    if (!level2Active && score.score >= LEVEL_2_THRESHOLD) {
+    // update levels
+    if (!level2Active && !level3Active && score.score >= LEVEL_2_THRESHOLD) {
       // Level 2 uses indexes 3..5
       cactiController.setIndexRange(3, 5);
       level2Active = true;
+    } else if (level2Active && !level3Active && score.score >= LEVEL_3_THRESHOLD) {
+      // Level 3 uses indexes 6..8
+      cactiController.setIndexRange(6, 8);
+      level3Active = true;
+    } else if (level3Active && !level4Active && score.score >= LEVEL_4_THRESHOLD) {
+      // Level 4 uses indexes 8..10
+      cactiController.setIndexRange(8, 10);
+      level4Active = true;
     }
   }
-
-
 
   if (!gameOver && cactiController.collideWith(player)) {
     gameOver = true;
