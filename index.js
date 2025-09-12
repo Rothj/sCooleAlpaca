@@ -30,7 +30,7 @@ const CACTI_CONFIG = [
   { width: 68 / 1.5, height: 70 / 1.5, image: "images/obstacle3.png" },
 ];
 
-const LEVEL_2_THRESHOLD = 10; // e.g., switch after score >= 1000
+const LEVEL_2_THRESHOLD = 995; // e.g., switch after score >= 1000
 let level2Active = false;
 
 //Game Objects
