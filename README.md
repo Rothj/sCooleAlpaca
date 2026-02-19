@@ -1,6 +1,6 @@
 # S'Coole Alpaca
 
-The google dino game adapted to the logo of a friends' coffee place.
+The google dino game adapted to the logo of a [friends' coffee place](https://scoolealpaca.ch/).
 
 ### Source:
 
